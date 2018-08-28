@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 project(maguey)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${maguey_SOURCE_DIR}/cmake")
+set(BIN_DIR ${maguey_SOURCE_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 if (MSVC)
@@ -28,6 +29,7 @@ include_directories(
 )
 
 add_subdirectory(src)
+add_subdirectory(test)
 
 # if (NOT ${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
 #     file(COPY "${PROJECT_SOURCE_DIR}/res" DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
