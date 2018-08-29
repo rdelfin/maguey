@@ -1,9 +1,14 @@
 cmake_minimum_required(VERSION 2.6)
 project(maguey)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${maguey_SOURCE_DIR}/cmake")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${maguey_SOURCE_DIR}/modules")
 set(BIN_DIR ${maguey_SOURCE_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+FILE(GLOB cmakes ${CMAKE_SOURCE_DIR}/cmake/*.cmake)
+FOREACH(cmake ${cmakes})
+    INCLUDE(${cmake})
+ENDFOREACH(cmake)
 
 if (MSVC)
     if (CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
@@ -21,7 +26,9 @@ include_directories()
 find_package(SDL2 REQUIRED)
 # find_package(SDL2_image REQUIRED)
 # find_package(SDL2_ttf REQUIRED)
+
 include_directories(
+    ${GLEW_INCLUDE_DIRS}
     ${SDL2_INCLUDE_DIR}
     # ${SDL2_IMAGE_INCLUDE_DIR}
     # ${SDL2_TTF_INCLUDE_DIR}
