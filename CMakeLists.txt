@@ -36,7 +36,7 @@ include_directories(
 )
 
 add_subdirectory(src)
-add_subdirectory(test)
+add_subdirectory(examples)
 
 # if (NOT ${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
 #     file(COPY "${PROJECT_SOURCE_DIR}/res" DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
