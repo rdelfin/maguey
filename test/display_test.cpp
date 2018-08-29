@@ -1,11 +1,8 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 
-#include <SDL2/SDL.h>
+#include <maguey/game.hpp>
 
-#include <maguey/cleanup.h>
-
-#include <iostream>
 #include <vector>
 
 
@@ -33,14 +30,6 @@ void main(){
 }
 )zzz";
 
-/**
-* Log an SDL error with some error message to the output stream of our choice
-* @param os The output stream to write the message to
-* @param msg The error message to write, format will be msg error: SDL_GetError()
-*/
-void logSDLError(std::ostream &os, const std::string &msg){
-    os << msg << " error: " << SDL_GetError() << std::endl;
-}
 
 GLuint load_shaders(const std::string& vertex_shader, const std::string& fragment_shader){
 
@@ -103,80 +92,50 @@ GLuint load_shaders(const std::string& vertex_shader, const std::string& fragmen
     return program_id;
 }
 
-int main(int, char**){
-    bool quit = false;
-    SDL_Event e;
-    SDL_GLContext glContext;
+static const GLfloat g_vertex_buffer_data[] = {
+    -1.0f, -1.0f, 0.0f,
+    1.0f, -1.0f, 0.0f,
+    0.0f,  1.0f, 0.0f,
+};
 
-    //Use OpenGL 3.1 core
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+static const GLfloat g_color_buffer_data[] = {
+    1.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, 0.0f,
+    0.0f, 0.0f, 1.0f,
+};
 
-    if (SDL_Init(SDL_INIT_VIDEO) != 0){
-        logSDLError(std::cout, "SDL_Init");
-        return 1;
+
+class MainGame : public maguey::Game {
+public:
+    MainGame() : maguey::Game("Display test", 1920, 1080) { }
+    virtual ~MainGame() {}
+protected:
+    virtual void load() override {
+        GLuint VertexArrayID;
+        glGenVertexArrays(1, &VertexArrayID);
+        glBindVertexArray(VertexArrayID);
+
+
+        // Generate 1 buffer, put the resulting identifier in vertexbuffer
+        glGenBuffers(1, &vertexbuffer);
+        // The following commands will talk about our 'vertexbuffer' buffer
+        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+        // Give our vertices to OpenGL.
+        glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+
+        glGenBuffers(1, &colorbuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
+
+        this->program_id = load_shaders(VERT_SHADER, FRAG_SHADER);
     }
 
-    SDL_Window *window = SDL_CreateWindow("Maguey test", 100, 100, SCREEN_WIDTH,
-        SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
-    if (window == nullptr){
-        logSDLError(std::cout, "CreateWindow");
-        SDL_Quit();
-        return 1;
+    virtual void update() override {
+
     }
 
-    glContext = SDL_GL_CreateContext(window);
-    if(glContext == nullptr) {
-        logSDLError(std::cout, "createGLContext");
-        cleanup(window);
-        SDL_Quit();
-        return 1;
-    }
-
-    glewInit();
-
-    GLuint VertexArrayID;
-    glGenVertexArrays(1, &VertexArrayID);
-    glBindVertexArray(VertexArrayID);
-
-    static const GLfloat g_vertex_buffer_data[] = {
-        -1.0f, -1.0f, 0.0f,
-        1.0f, -1.0f, 0.0f,
-        0.0f,  1.0f, 0.0f,
-    };
-
-    static const GLfloat g_color_buffer_data[] = {
-        1.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 1.0f,
-    };
-
-    // This will identify our vertex buffer
-    GLuint vertexbuffer;
-    // Generate 1 buffer, put the resulting identifier in vertexbuffer
-    glGenBuffers(1, &vertexbuffer);
-    // The following commands will talk about our 'vertexbuffer' buffer
-    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-    // Give our vertices to OpenGL.
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-
-    GLuint colorbuffer;
-    glGenBuffers(1, &colorbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
-
-    GLuint programID = load_shaders(VERT_SHADER, FRAG_SHADER);
-
-    while(!quit) {
-        while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT)
-                quit = true;
-        }
-
-        glClearColor(0.390625f, 0.58203125f, 0.92578125f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glUseProgram(programID);
+    virtual void render() override {
+        glUseProgram(this->program_id);
 
        // 1st attribute buffer : vertices
         glEnableVertexAttribArray(0);
@@ -205,12 +164,17 @@ int main(int, char**){
         glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
-
-        SDL_GL_SwapWindow(window);
-        SDL_Delay(16);
     }
 
-    cleanup(window);
-    SDL_Quit();
+private:
+    GLuint program_id;
+    GLuint vertexbuffer;
+    GLuint colorbuffer;
+
+};
+
+int main(int, char**){
+    MainGame game;
+    game.run();
     return 0;
 }
