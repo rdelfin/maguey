@@ -2,6 +2,8 @@
 #include <GL/gl.h>
 
 #include <maguey/game.hpp>
+#include <maguey/program.hpp>
+#include <maguey/shader.hpp>
 
 #include <vector>
 
@@ -30,68 +32,6 @@ void main(){
 }
 )zzz";
 
-
-GLuint load_shaders(const std::string& vertex_shader, const std::string& fragment_shader){
-
-    // Create the shaders
-    GLuint vertex_shader_id = glCreateShader(GL_VERTEX_SHADER);
-    GLuint fragment_shader_id = glCreateShader(GL_FRAGMENT_SHADER);
-
-    GLint result = GL_FALSE;
-    int log_len;
-
-    // Compile Vertex Shader
-    const char* vshader_ptr = vertex_shader.c_str();
-    glShaderSource(vertex_shader_id, 1, &vshader_ptr, NULL);
-    glCompileShader(vertex_shader_id);
-
-    // Check Vertex Shader
-    glGetShaderiv(vertex_shader_id, GL_COMPILE_STATUS, &result);
-    glGetShaderiv(vertex_shader_id, GL_INFO_LOG_LENGTH, &log_len);
-    if (log_len > 0) {
-        std::vector<char> error_msg(log_len + 1);
-        glGetShaderInfoLog(vertex_shader_id, log_len, NULL, &error_msg[0]);
-        printf("%s\n", &error_msg[0]);
-    }
-
-    // Compile Fragment Shader
-    const char* fshader_ptr = fragment_shader.c_str();
-    glShaderSource(fragment_shader_id, 1, &fshader_ptr, NULL);
-    glCompileShader(fragment_shader_id);
-
-    // Check Fragment Shader
-    glGetShaderiv(fragment_shader_id, GL_COMPILE_STATUS, &result);
-    glGetShaderiv(fragment_shader_id, GL_INFO_LOG_LENGTH, &log_len);
-    if (log_len > 0) {
-        std::vector<char> error_msg(log_len + 1);
-        glGetShaderInfoLog(fragment_shader_id, log_len, NULL, &error_msg[0]);
-        printf("%s\n", &error_msg[0]);
-    }
-
-    // Link the program
-    GLuint program_id = glCreateProgram();
-    glAttachShader(program_id, vertex_shader_id);
-    glAttachShader(program_id, fragment_shader_id);
-    glLinkProgram(program_id);
-
-    // Check the program
-    glGetProgramiv(program_id, GL_LINK_STATUS, &result);
-    glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &log_len);
-    if (log_len > 0) {
-        std::vector<char> error_msg(log_len + 1);
-        glGetProgramInfoLog(program_id, log_len, NULL, &error_msg[0]);
-        printf("%s\n", &error_msg[0]);
-    }
-
-    glDetachShader(program_id, vertex_shader_id);
-    glDetachShader(program_id, fragment_shader_id);
-
-    glDeleteShader(vertex_shader_id);
-    glDeleteShader(fragment_shader_id);
-
-    return program_id;
-}
-
 static const GLfloat g_vertex_buffer_data[] = {
     -1.0f, -1.0f, 0.0f,
     1.0f, -1.0f, 0.0f,
@@ -107,7 +47,8 @@ static const GLfloat g_color_buffer_data[] = {
 
 class MainGame : public maguey::Game {
 public:
-    MainGame() : maguey::Game("Display test", 1920, 1080) { }
+    MainGame() : maguey::Game("Display test", 1920, 1080),
+        program(VERT_SHADER, FRAG_SHADER, false) { }
     virtual ~MainGame() {}
 protected:
     virtual void load() override {
@@ -127,7 +68,7 @@ protected:
         glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
 
-        this->program_id = load_shaders(VERT_SHADER, FRAG_SHADER);
+        this->program.load();
     }
 
     virtual void update() override {
@@ -135,7 +76,7 @@ protected:
     }
 
     virtual void render() override {
-        glUseProgram(this->program_id);
+        this->program.enable();
 
        // 1st attribute buffer : vertices
         glEnableVertexAttribArray(0);
@@ -167,7 +108,7 @@ protected:
     }
 
 private:
-    GLuint program_id;
+    maguey::Program program;
     GLuint vertexbuffer;
     GLuint colorbuffer;
 
