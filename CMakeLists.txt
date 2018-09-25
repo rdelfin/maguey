@@ -32,6 +32,7 @@ include_directories(
     ${SDL2_INCLUDE_DIR}
     # ${SDL2_IMAGE_INCLUDE_DIR}
     # ${SDL2_TTF_INCLUDE_DIR}
+    ${glm_INCLUDE_DIRS}
     include/
 )
 

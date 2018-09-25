@@ -6,7 +6,7 @@ FILE(GLOB src ${pwd}/*.cpp)
 
 add_library(maguey STATIC ${src})
 
-target_link_libraries(maguey ${SDL2_LIBRARY} ${stdgl_libraries})
+target_link_libraries(maguey ${SDL2_LIBRARY} ${stdgl_libraries} ${glm_LIBRARY_DIRS})
 
 install(TARGETS maguey
         EXPORT magueyTargets
