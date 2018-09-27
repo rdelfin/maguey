@@ -58,7 +58,6 @@ class MainGame : public maguey::Game {
 
  protected:
     void load(maguey::Camera* camera) override {
-        this->program.load();
         this->mesh.load(points, program);
         this->program = maguey::Program(
             std::string(VERT_SHADER), std::string(FRAG_SHADER),
@@ -66,6 +65,7 @@ class MainGame : public maguey::Game {
                 camera->createPerspectiveMatrixUniform(),
                 camera->createViewMatrixUniform(),
             }, false);
+        this->program.load();
     }
 
     void update(maguey::Camera* camera) override { }

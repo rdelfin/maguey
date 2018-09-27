@@ -28,7 +28,7 @@ Program::Program(const Shader& vertex_shader, const Shader& fragment_shader,
                    fragment_shader(fragment_shader), uniforms(uniforms) { }
 
 Program::Program(const std::string& vertex_shader,
-                 const std::string&fragment_shader,
+                 const std::string& fragment_shader,
                  std::vector<Uniform> uniforms, bool is_file)
                  : vertex_shader(ShaderType::VERT_SHADER, vertex_shader,
                                  is_file),
