@@ -74,12 +74,12 @@ void Game::run() {
                 quit = true;
         }
 
-        this->update();
+        this->update(&this->camera);
 
         glClearColor(0.390625f, 0.58203125f, 0.92578125f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        this->render();
+        this->render(&this->camera);
 
         SDL_GL_SwapWindow(window);
         SDL_Delay(16);

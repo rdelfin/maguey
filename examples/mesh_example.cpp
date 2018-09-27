@@ -58,9 +58,9 @@ class MainGame : public maguey::Game {
         this->mesh.load(points);
     }
 
-    void update() override { }
+    void update(maguey::Camera* camera) override { }
 
-    void render() override {
+    void render(maguey::Camera* camera) override {
         this->program.enable();
         this->mesh.render();
     }

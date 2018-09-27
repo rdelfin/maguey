@@ -15,6 +15,8 @@
 
 #include <string>
 
+#include <maguey/camera.hpp>
+
 namespace maguey {
 
 class Game {
@@ -28,12 +30,13 @@ class Game {
 
  protected:
     virtual void load() = 0;
-    virtual void update() = 0;
-    virtual void render() = 0;
+    virtual void update(Camera* camera) = 0;
+    virtual void render(Camera* camera) = 0;
 
  private:
     std::string window_name;
     size_t window_width, window_height;
+    Camera camera;
 };
 
 }  // namespace maguey

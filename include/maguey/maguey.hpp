@@ -13,8 +13,10 @@
 
 #pragma once
 
+#include <maguey/camera.hpp>
 #include <maguey/game.hpp>
 #include <maguey/program.hpp>
 #include <maguey/renderable.hpp>
 #include <maguey/shader.hpp>
 #include <maguey/triangle_mesh.hpp>
+#include <maguey/uniform.hpp>

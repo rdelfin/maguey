@@ -16,9 +16,7 @@
 
 #include <vector>
 
-#include <maguey/game.hpp>
-#include <maguey/program.hpp>
-#include <maguey/shader.hpp>
+#include <maguey/maguey.hpp>
 
 
 const int SCREEN_WIDTH  = 1920;
@@ -87,9 +85,9 @@ class MainGame : public maguey::Game {
         this->program.load();
     }
 
-    void update() override { }
+    void update(maguey::Camera* camera) override { }
 
-    void render() override {
+    void render(maguey::Camera* camera) override {
         this->program.enable();
 
        // 1st attribute buffer : vertices
