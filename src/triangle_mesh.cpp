@@ -15,6 +15,8 @@
 
 #include <memory>
 
+#include <maguey/internal/debuggl.hpp>
+
 namespace maguey {
 
 TriangleMesh::TriangleMesh() { }
@@ -24,28 +26,29 @@ void TriangleMesh::load(const std::vector<glm::vec3>& pos,
     this->program = program;
     this->vertices = std::unique_ptr<std::vector<glm::vec3>>(
         new std::vector<glm::vec3>(pos));
-    glCreateVertexArrays(1, &this->vao);
-    glBindVertexArray(this->vao);
+    CHECK_GL_ERROR(glCreateVertexArrays(1, &this->vao));
+    CHECK_GL_ERROR(glBindVertexArray(this->vao));
 
-    glGenBuffers(1, &this->buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, this->buffer);
-    glBufferData(GL_ARRAY_BUFFER, this->vertices->size()*sizeof(glm::vec3),
-                 this->vertices->data(), GL_STATIC_DRAW);
+    CHECK_GL_ERROR(glGenBuffers(1, &this->buffer));
+    CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, this->buffer));
+    CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER,
+                                this->vertices->size()*sizeof(glm::vec3),
+                                this->vertices->data(), GL_STATIC_DRAW));
 }
 
 void TriangleMesh::render() {
     program.enable();
 
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, this->buffer);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-    glDrawArrays(GL_TRIANGLES, 0, this->vertices->size());
-    glDisableVertexAttribArray(0);
+    CHECK_GL_ERROR(glEnableVertexAttribArray(0));
+    CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, this->buffer));
+    CHECK_GL_ERROR(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr));
+    CHECK_GL_ERROR(glDrawArrays(GL_TRIANGLES, 0, this->vertices->size()));
+    CHECK_GL_ERROR(glDisableVertexAttribArray(0));
 }
 
 TriangleMesh::~TriangleMesh() {
-    glDeleteVertexArrays(1, &this->vao);
-    glDeleteBuffers(1, &buffer);
+    CHECK_GL_ERROR(glDeleteVertexArrays(1, &this->vao));
+    CHECK_GL_ERROR(glDeleteBuffers(1, &buffer));
 }
 
 }  // namespace maguey

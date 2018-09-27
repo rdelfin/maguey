@@ -18,6 +18,8 @@
 
 #include <vector>
 
+#include <maguey/internal/debuggl.hpp>
+
 namespace maguey {
 
 Program::Program() { }
@@ -47,10 +49,9 @@ void Program::load() {
 
     // Link the program
     this->program_id = glCreateProgram();
-    glAttachShader(this->program_id, vsid);
-    glAttachShader(this->program_id, fsid);
-    glLinkProgram(this->program_id);
-
+    CHECK_GL_ERROR(glAttachShader(this->program_id, vsid));
+    CHECK_GL_ERROR(glAttachShader(this->program_id, fsid));
+    CHECK_GL_ERROR(glLinkProgram(this->program_id));
     // Check the program
     glGetProgramiv(this->program_id, GL_LINK_STATUS, &result);
     glGetProgramiv(this->program_id, GL_INFO_LOG_LENGTH, &log_len);
@@ -61,11 +62,11 @@ void Program::load() {
         printf("%s\n", &error_msg[0]);
     }
 
-    glDetachShader(this->program_id, vsid);
-    glDetachShader(this->program_id, fsid);
+    CHECK_GL_ERROR(glDetachShader(this->program_id, vsid));
+    CHECK_GL_ERROR(glDetachShader(this->program_id, fsid));
 
-    glDeleteShader(vsid);
-    glDeleteShader(fsid);
+    CHECK_GL_ERROR(glDeleteShader(vsid));
+    CHECK_GL_ERROR(glDeleteShader(fsid));
 }
 
 void Program::enable() {

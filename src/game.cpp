@@ -20,6 +20,7 @@
 
 #include <maguey/game.hpp>
 #include <maguey/internal/cleanup.hpp>
+#include <maguey/internal/debuggl.hpp>
 
 
 namespace maguey {
@@ -77,8 +78,8 @@ void Game::run() {
 
         this->update(&this->camera);
 
-        glClearColor(0.390625f, 0.58203125f, 0.92578125f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        CHECK_GL_ERROR(glClearColor(0.390625f, 0.58203125f, 0.92578125f, 1.0f));
+        CHECK_GL_ERROR(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
         this->render(&this->camera);
 

@@ -16,6 +16,8 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 
+#include <maguey/internal/debuggl.hpp>
+
 namespace maguey {
 
 struct EnumClassHash {
@@ -32,103 +34,114 @@ std::unordered_map<UniformType, std::function<void(GLint, void*)>,
     {
         UNIFORM_FLOAT,
         [](GLint loc, void* data) {
-            glUniform1f(loc, *reinterpret_cast<float*>(data));
+            CHECK_GL_ERROR(glUniform1f(loc, *reinterpret_cast<float*>(data)));
         },
     },
     {
         UNIFORM_INT,
         [](GLint loc, void* data) {
-            glUniform1i(loc, *reinterpret_cast<int*>(data));
+            CHECK_GL_ERROR(glUniform1i(loc, *reinterpret_cast<int*>(data)));
         },
     },
     {
         UNIFORM_FVEC_1,
         [](GLint loc, void* data) {
-            glUniform1fv(loc, 1, reinterpret_cast<float*>(data));
+            CHECK_GL_ERROR(glUniform1fv(loc, 1,
+                                        reinterpret_cast<float*>(data)));
         },
     },
     {
         UNIFORM_FVEC_2,
         [](GLint loc, void* data) {
-            glUniform2fv(loc, 1, reinterpret_cast<float*>(data));
+            CHECK_GL_ERROR(glUniform2fv(loc, 1,
+                                        reinterpret_cast<float*>(data)));
         },
     },
     {
         UNIFORM_FVEC_2,
         [](GLint loc, void* data) {
-            glUniform2fv(loc, 1, reinterpret_cast<float*>(data));
+            CHECK_GL_ERROR(glUniform2fv(loc, 1,
+                                        reinterpret_cast<float*>(data)));
         },
     },
     {
         UNIFORM_FVEC_3,
         [](GLint loc, void* data) {
-            glUniform3fv(loc, 1, reinterpret_cast<float*>(data));
+            CHECK_GL_ERROR(glUniform3fv(loc, 1,
+                                        reinterpret_cast<float*>(data)));
         },
     },
     {
         UNIFORM_IVEC_1,
         [](GLint loc, void* data) {
-            glUniform1iv(loc, 1, reinterpret_cast<int*>(data));
+            CHECK_GL_ERROR(glUniform1iv(loc, 1, reinterpret_cast<int*>(data)));
         },
     },
     {
         UNIFORM_IVEC_2,
         [](GLint loc, void* data) {
-            glUniform2iv(loc, 1, reinterpret_cast<int*>(data));
+            CHECK_GL_ERROR(glUniform2iv(loc, 1, reinterpret_cast<int*>(data)));
         },
     },
     {
         UNIFORM_IVEC_3,
         [](GLint loc, void* data) {
-            glUniform3iv(loc, 1, reinterpret_cast<int*>(data));
+            CHECK_GL_ERROR(glUniform3iv(loc, 1, reinterpret_cast<int*>(data)));
         },
     },
     {
         UNIFORM_IVEC_4,
         [](GLint loc, void* data) {
-            glUniform4iv(loc, 1, reinterpret_cast<int*>(data));
+            CHECK_GL_ERROR(glUniform4iv(loc, 1, reinterpret_cast<int*>(data)));
         },
     },
     {
         UNIFORM_UVEC_1,
         [](GLint loc, void* data) {
-            glUniform1uiv(loc, 1, reinterpret_cast<unsigned*>(data));
+            CHECK_GL_ERROR(glUniform1uiv(loc, 1,
+                                         reinterpret_cast<unsigned*>(data)));
         },
     },
     {
         UNIFORM_UVEC_2,
         [](GLint loc, void* data) {
-            glUniform2uiv(loc, 1, reinterpret_cast<unsigned*>(data));
+            CHECK_GL_ERROR(glUniform2uiv(loc, 1,
+                                         reinterpret_cast<unsigned*>(data)));
         },
     },
     {
         UNIFORM_UVEC_3,
         [](GLint loc, void* data) {
-            glUniform3uiv(loc, 1, reinterpret_cast<unsigned*>(data));
+            CHECK_GL_ERROR(glUniform3uiv(loc, 1,
+                                         reinterpret_cast<unsigned*>(data)));
         },
     },
     {
         UNIFORM_UVEC_4,
         [](GLint loc, void* data) {
-            glUniform4uiv(loc, 1, reinterpret_cast<unsigned*>(data));
+            CHECK_GL_ERROR(glUniform4uiv(loc, 1,
+                                         reinterpret_cast<unsigned*>(data)));
         },
     },
     {
         UNIFORM_FMAT_2,
         [](GLint loc, void* data) {
-            glUniformMatrix2fv(loc, 1, false, reinterpret_cast<float*>(data));
+            CHECK_GL_ERROR(glUniformMatrix2fv(loc, 1, false,
+                                              reinterpret_cast<float*>(data)));
         },
     },
     {
         UNIFORM_FMAT_3,
         [](GLint loc, void* data) {
-            glUniformMatrix3fv(loc, 1, false, reinterpret_cast<float*>(data));
+            CHECK_GL_ERROR(glUniformMatrix3fv(loc, 1, false,
+                                              reinterpret_cast<float*>(data)));
         },
     },
     {
         UNIFORM_FMAT_4,
         [](GLint loc, void* data) {
-            glUniformMatrix4fv(loc, 1, false, reinterpret_cast<float*>(data));
+            CHECK_GL_ERROR(glUniformMatrix4fv(loc, 1, false,
+                                              reinterpret_cast<float*>(data)));
         },
     },
 };
@@ -143,7 +156,8 @@ Uniform::Uniform(void* data, UniformType type, const std::string& uniform_name)
 
 void Uniform::enable(GLint program_id) {
     if (!loc_set) {
-        this->loc = glGetUniformLocation(program_id, uniform_name.c_str());
+        CHECK_GL_ERROR(this->loc = glGetUniformLocation(
+                           program_id, uniform_name.c_str()));
         loc_set = false;
     }
     uniform_func_map[this->type](this->loc, this->data);

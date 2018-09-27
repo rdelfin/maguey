@@ -11,6 +11,8 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
+#include <maguey/shader.hpp>
+
 #include <GL/glew.h>
 #include <GL/gl.h>
 
@@ -20,7 +22,7 @@
 #include <streambuf>
 #include <vector>
 
-#include <maguey/shader.hpp>
+#include <maguey/internal/debuggl.hpp>
 
 
 namespace maguey {
@@ -52,14 +54,16 @@ void Shader::load() {
     GLint result = GL_FALSE;
     int log_len;
 
-    this->program_id = glCreateShader(shader_type_to_gl(this->type));
+    CHECK_GL_ERROR(
+        this->program_id = glCreateShader(shader_type_to_gl(this->type)));
     const char* source = this->program.c_str();
-    glShaderSource(this->program_id, 1, &source, NULL);
-    glCompileShader(this->program_id);
+    CHECK_GL_ERROR(glShaderSource(this->program_id, 1, &source, NULL));
+    CHECK_GL_ERROR(glCompileShader(this->program_id));
 
     // Check Vertex Shader
-    glGetShaderiv(this->program_id, GL_COMPILE_STATUS, &result);
-    glGetShaderiv(this->program_id, GL_INFO_LOG_LENGTH, &log_len);
+    CHECK_GL_ERROR(glGetShaderiv(this->program_id, GL_COMPILE_STATUS, &result));
+    CHECK_GL_ERROR(
+        glGetShaderiv(this->program_id, GL_INFO_LOG_LENGTH, &log_len));
     if (log_len > 0) {
         std::vector<char> error_msg(log_len + 1);
         glGetShaderInfoLog(this->program_id, log_len, NULL, &error_msg[0]);
