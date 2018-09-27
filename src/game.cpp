@@ -27,7 +27,8 @@ namespace maguey {
 Game::Game() { }
 
 Game::Game(const std::string& window_name, size_t width, size_t height)
-    : window_name(window_name), window_width(width), window_height(height) { }
+    : window_name(window_name), window_width(width), window_height(height),
+      camera(glm::vec3(0, 1, 0), glm::vec3(0, 0, 0), glm::vec3(0, 1, -1)) { }
 
 void Game::run() {
     bool quit = false;
@@ -66,7 +67,7 @@ void Game::run() {
 
     glewInit();
 
-    this->load();
+    this->load(&this->camera);
 
     while (!quit) {
         while (SDL_PollEvent(&e)) {

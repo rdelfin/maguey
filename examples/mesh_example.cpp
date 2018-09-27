@@ -27,9 +27,12 @@ const char VERT_SHADER[] = R"zzz(
 #version 330 core
 layout(location = 0) in vec3 pos_model;
 
+uniform mat4 perspective;
+uniform mat4 view;
+
 void main() {
-    gl_Position.xyz = pos_model;
-    gl_Position.w = 1.0;
+    vec4 pos = vec4(pos_model, 1.0);
+    gl_Position = perspective * view * pos;
 }
 )zzz";
 
@@ -49,14 +52,20 @@ static const std::vector<glm::vec3> points = {
 
 class MainGame : public maguey::Game {
  public:
-    MainGame() : maguey::Game("Mesh test", 1920, 1080),
-        program(std::string(VERT_SHADER),
-                std::string(FRAG_SHADER), {}, false) { }
+    MainGame() : maguey::Game("Mesh test", 1920, 1080) { }
+
+    virtual ~MainGame() { }
 
  protected:
-    void load() override {
+    void load(maguey::Camera* camera) override {
         this->program.load();
         this->mesh.load(points, program);
+        this->program = maguey::Program(
+            std::string(VERT_SHADER), std::string(FRAG_SHADER),
+            {
+                camera->createPerspectiveMatrixUniform(),
+                camera->createViewMatrixUniform(),
+            }, false);
     }
 
     void update(maguey::Camera* camera) override { }

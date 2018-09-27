@@ -13,6 +13,8 @@
 
 #define GLM_FORCE_RADIANS
 
+#include <iostream>
+
 #include <maguey/camera.hpp>
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -36,12 +38,20 @@ void* Camera::getPerspectiveMatrix() {
 }
 
 void* Camera::getViewMatrix() {
-    return &this->view_matrix[0];
+    return &this->view_mat[0];
+}
+
+Uniform Camera::createPerspectiveMatrixUniform() {
+    return Uniform(this->getPerspectiveMatrix(), UNIFORM_FMAT_4, "perspective");
+}
+
+Uniform Camera::createViewMatrixUniform() {
+    return Uniform(this->getPerspectiveMatrix(), UNIFORM_FMAT_4, "view");
 }
 
 void Camera::update_all() {
     this->perspective_mat = glm::perspective(3.14f, 1.0f, 0.001f, 1000.0f);
-    this->view_matrix = glm::lookAt(this->position + this->forwards,
+    this->view_mat = glm::lookAt(this->position + this->forwards,
                                     this->position, up);
 }
 

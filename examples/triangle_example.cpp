@@ -63,7 +63,7 @@ class MainGame : public maguey::Game {
     virtual ~MainGame() {}
 
  protected:
-    void load() override {
+    void load(maguey::Camera* camera) override {
         GLuint VertexArrayID;
         glGenVertexArrays(1, &VertexArrayID);
         glBindVertexArray(VertexArrayID);

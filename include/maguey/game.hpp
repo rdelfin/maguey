@@ -29,7 +29,7 @@ class Game {
     virtual ~Game();
 
  protected:
-    virtual void load() = 0;
+    virtual void load(Camera* camera) = 0;
     virtual void update(Camera* camera) = 0;
     virtual void render(Camera* camera) = 0;
 

@@ -57,6 +57,7 @@ void Program::load() {
     if (log_len > 0) {
         std::vector<char> error_msg(log_len + 1);
         glGetProgramInfoLog(this->program_id, log_len, NULL, &error_msg[0]);
+        printf("There was an error in shader program %d\n", this->program_id);
         printf("%s\n", &error_msg[0]);
     }
 

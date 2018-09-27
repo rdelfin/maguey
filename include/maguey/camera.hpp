@@ -15,6 +15,8 @@
 
 #include <glm/glm.hpp>
 
+#include <maguey/uniform.hpp>
+
 namespace maguey {
 
 class Camera {
@@ -24,6 +26,9 @@ class Camera {
 
     void* getPerspectiveMatrix();
     void* getViewMatrix();
+
+    Uniform createPerspectiveMatrixUniform();
+    Uniform createViewMatrixUniform();
 
     virtual ~Camera();
 
@@ -35,7 +40,7 @@ class Camera {
     glm::vec3 forwards;
     glm::vec3 position;
 
-    glm::mat4 perspective_mat, view_matrix;
+    glm::mat4 perspective_mat, view_mat;
 };
 
 }  // namespace maguey
