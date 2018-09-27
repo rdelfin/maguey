@@ -50,18 +50,18 @@ static const std::vector<glm::vec3> points = {
 class MainGame : public maguey::Game {
  public:
     MainGame() : maguey::Game("Mesh test", 1920, 1080),
-        program(std::string(VERT_SHADER), std::string(FRAG_SHADER), false) { }
+        program(std::string(VERT_SHADER),
+                std::string(FRAG_SHADER), {}, false) { }
 
  protected:
     void load() override {
         this->program.load();
-        this->mesh.load(points);
+        this->mesh.load(points, program);
     }
 
     void update(maguey::Camera* camera) override { }
 
     void render(maguey::Camera* camera) override {
-        this->program.enable();
         this->mesh.render();
     }
 

@@ -19,7 +19,9 @@ namespace maguey {
 
 TriangleMesh::TriangleMesh() { }
 
-void TriangleMesh::load(const std::vector<glm::vec3>& pos) {
+void TriangleMesh::load(const std::vector<glm::vec3>& pos,
+                        const Program& program) {
+    this->program = program;
     this->vertices = std::unique_ptr<std::vector<glm::vec3>>(
         new std::vector<glm::vec3>(pos));
     glCreateVertexArrays(1, &this->vao);
@@ -32,6 +34,8 @@ void TriangleMesh::load(const std::vector<glm::vec3>& pos) {
 }
 
 void TriangleMesh::render() {
+    program.enable();
+
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, this->buffer);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);

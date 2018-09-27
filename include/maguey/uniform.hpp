@@ -46,18 +46,19 @@ enum UniformType {
 class Uniform {
  public:
     Uniform();
-    Uniform(void* data, GLint program_id, UniformType type,
-            const std::string& unifrom_name);
+    Uniform(void* data, UniformType type, const std::string& unifrom_name);
 
-    void enable();
+    void enable(GLint program_id);
     void update_data_ptr(void* new_data);
 
     virtual ~Uniform();
 
  private:
-    GLint loc;
     void* data;
     UniformType type;
+    std::string uniform_name;
+    bool loc_set;
+    int loc;
 };
 
 }  // namespace maguey

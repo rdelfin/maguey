@@ -22,6 +22,7 @@
 #include <glm/glm.hpp>
 
 #include <maguey/renderable.hpp>
+#include <maguey/program.hpp>
 
 namespace maguey {
 
@@ -29,7 +30,7 @@ class TriangleMesh : public Renderable {
  public:
     TriangleMesh();
 
-    void load(const std::vector<glm::vec3>& vpos);
+    void load(const std::vector<glm::vec3>& vpos, const Program& program);
 
     void render() override;
 
@@ -38,6 +39,7 @@ class TriangleMesh : public Renderable {
     std::unique_ptr<std::vector<glm::vec3>> vertices;
 
     GLuint buffer, vao;
+    Program program;
 };
 
 }  // namespace maguey

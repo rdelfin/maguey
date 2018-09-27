@@ -18,7 +18,16 @@
 
 namespace maguey {
 
-std::unordered_map<UniformType, std::function<void(GLint, void*)>>
+struct EnumClassHash {
+    template <typename T>
+    std::size_t operator()(T t) const {
+        return static_cast<std::size_t>(t);
+    }
+};
+
+
+std::unordered_map<UniformType, std::function<void(GLint, void*)>,
+                   EnumClassHash>
     uniform_func_map = {
     {
         UNIFORM_FLOAT,
@@ -127,13 +136,16 @@ std::unordered_map<UniformType, std::function<void(GLint, void*)>>
 Uniform::Uniform() {
 }
 
-Uniform::Uniform(void* data, GLint program_id, UniformType type,
-                 const std::string& uniform_name)
-                 : data(data), type(type) {
-    this->loc = glGetUniformLocation(program_id, uniform_name.c_str());
+Uniform::Uniform(void* data, UniformType type, const std::string& uniform_name)
+                 : data(data), type(type), uniform_name(uniform_name),
+                   loc_set(false) {
 }
 
-void Uniform::enable() {
+void Uniform::enable(GLint program_id) {
+    if (!loc_set) {
+        this->loc = glGetUniformLocation(program_id, uniform_name.c_str());
+        loc_set = false;
+    }
     uniform_func_map[this->type](this->loc, this->data);
 }
 

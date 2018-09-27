@@ -15,17 +15,20 @@
 
 #include <cstdint>
 #include <string>
+#include <vector>
 
 #include <maguey/shader.hpp>
+#include <maguey/uniform.hpp>
 
 namespace maguey {
 
 class Program {
  public:
     Program();
-    Program(const Shader& vertex_shader, const Shader& fragment_shader);
+    Program(const Shader& vertex_shader, const Shader& fragment_shader,
+            std::vector<Uniform> uniforms = {});
     Program(const std::string& vertex_shader, const std::string&fragment_shader,
-            bool is_file = true);
+            std::vector<Uniform> uniforms = {}, bool is_file = true);
 
     void load();
 
@@ -34,6 +37,7 @@ class Program {
     ~Program();
  private:
     Shader vertex_shader, fragment_shader;
+    std::vector<Uniform> uniforms;
     int32_t program_id;
 };
 

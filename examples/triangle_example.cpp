@@ -59,7 +59,7 @@ static const GLfloat g_color_buffer_data[] = {
 class MainGame : public maguey::Game {
  public:
     MainGame() : maguey::Game("Display test", 1920, 1080),
-        program(VERT_SHADER, FRAG_SHADER, false) { }
+        program(VERT_SHADER, FRAG_SHADER, {}, false) { }
     virtual ~MainGame() {}
 
  protected:
