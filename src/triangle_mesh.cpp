@@ -26,6 +26,9 @@ void TriangleMesh::load(const std::vector<glm::vec3>& pos,
     this->program = program;
     this->vertices = std::unique_ptr<std::vector<glm::vec3>>(
         new std::vector<glm::vec3>(pos));
+
+    this->program.load();
+
     CHECK_GL_ERROR(glCreateVertexArrays(1, &this->vao));
     CHECK_GL_ERROR(glBindVertexArray(this->vao));
 
