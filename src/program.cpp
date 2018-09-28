@@ -70,7 +70,7 @@ void Program::load() {
 }
 
 void Program::enable() {
-    glUseProgram(this->program_id);
+    CHECK_GL_ERROR(glUseProgram(this->program_id));
     for (Uniform& uniform : uniforms)
         uniform.enable(this->program_id);
 }
