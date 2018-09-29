@@ -22,7 +22,12 @@ namespace maguey {
 class Camera {
  public:
     Camera();
-    Camera(const glm::vec3& up, const glm::vec3& center, const glm::vec3& pos);
+    Camera(const glm::vec3& up, const glm::vec3& center, const glm::vec3& pos,
+           size_t screen_width, size_t screen_height);
+
+    Camera(const Camera&) = delete;
+
+    Camera& operator=(const Camera&) = delete;
 
     void* getPerspectiveMatrix();
     void* getViewMatrix();
@@ -39,6 +44,7 @@ class Camera {
     glm::vec3 left;
     glm::vec3 forwards;
     glm::vec3 position;
+    float swidth, sheight;
 
     glm::mat4 perspective_mat, view_mat;
 };

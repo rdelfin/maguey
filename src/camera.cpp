@@ -17,6 +17,8 @@
 
 #include <maguey/camera.hpp>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace maguey {
@@ -26,7 +28,8 @@ Camera::Camera() {
 }
 
 Camera::Camera(const glm::vec3& up, const glm::vec3& center,
-               const glm::vec3& pos) {
+               const glm::vec3& pos, size_t swidth, size_t sheight)
+               : swidth(swidth), sheight(sheight) {
     this->forwards = glm::normalize(center - pos);
     this->left = glm::normalize(glm::cross(up, this->forwards));
     this->up = glm::normalize(glm::cross(this->forwards, left));
@@ -34,11 +37,11 @@ Camera::Camera(const glm::vec3& up, const glm::vec3& center,
 }
 
 void* Camera::getPerspectiveMatrix() {
-    return &this->perspective_mat[0];
+    return glm::value_ptr(this->perspective_mat);
 }
 
 void* Camera::getViewMatrix() {
-    return &this->view_mat[0];
+    return glm::value_ptr(this->view_mat);
 }
 
 Uniform Camera::createPerspectiveMatrixUniform() {
@@ -46,17 +49,17 @@ Uniform Camera::createPerspectiveMatrixUniform() {
 }
 
 Uniform Camera::createViewMatrixUniform() {
-    return Uniform(this->getPerspectiveMatrix(), UNIFORM_FMAT_4, "view");
+    return Uniform(this->getViewMatrix(), UNIFORM_FMAT_4, "view");
 }
 
 void Camera::update_all() {
-    this->perspective_mat = glm::perspective(3.14f, 1.0f, 0.001f, 1000.0f);
-    this->view_mat = glm::lookAt(this->position + this->forwards,
-                                    this->position, up);
+    this->perspective_mat = glm::perspectiveFov(2.355f, this->swidth,
+                                                this->sheight, 0.001f, 1000.0f);
+    this->view_mat = glm::lookAt(this->position,
+                                 this->position + this->forwards, up);
 }
 
-Camera::~Camera() {
-}
+Camera::~Camera() { }
 
 
 }  // namespace maguey
