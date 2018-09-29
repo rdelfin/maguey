@@ -14,6 +14,7 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 
+#include <iostream>
 #include <vector>
 
 #include <glm/glm.hpp>
@@ -25,14 +26,13 @@ const int SCREEN_HEIGHT = 1080;
 
 const char VERT_SHADER[] = R"zzz(
 #version 330 core
-layout(location = 0) in vec3 pos_model;
+layout(location = 0) in vec3 pos;
 
-uniform mat4 perspective;
+uniform mat4 projection;
 uniform mat4 view;
 
 void main() {
-    vec4 pos = vec4(pos_model, 1.0);
-    gl_Position = perspective * view * pos;
+    gl_Position = vec4(pos, pos.z * -1.0f);
 }
 )zzz";
 
@@ -44,10 +44,10 @@ void main() {
 }
 )zzz";
 
-static const std::vector<glm::vec3> points = {
-    glm::vec3(1.0f, 0.0f, 0.0f),
-    glm::vec3(-1.0f, 0.0f, 0.0f),
-    glm::vec3(0.0f, 1.0f, 0.0f),
+static std::vector<glm::vec3> points = {
+    glm::vec3(1.0f,  -1.0f, 0.0f),
+    glm::vec3(-1.0f, -1.0f, 0.0f),
+    glm::vec3(0.0f,   1.0f, 0.0f),
 };
 
 class MainGame : public maguey::Game {
@@ -58,10 +58,28 @@ class MainGame : public maguey::Game {
 
  protected:
     void load(maguey::Camera* camera) override {
+        glm::mat4 view = *reinterpret_cast<glm::mat4*>(camera->getViewMatrix());
+        glm::mat4 proj = *reinterpret_cast<glm::mat4*>(camera->getProjectionMatrix());
+        std::cout << "New points: " << std::endl;
+        for (glm::vec3& point : points) {
+            point = glm::vec3(proj * view * glm::vec4(point, 1.0f));
+            std::cout << "(" << point.x << ", " << point.y << ", " << point.z
+                      << ", " << (point.z * -1.0f) << ")" << std::endl;
+        }
+
+        // std::cout << "Post-division:" << std::endl;
+        // for (glm::vec3 point : points) {
+        //     float div = point.z * -2.002002f;
+        //     std::cout << point.z << "* -2.002002f = " << div << std::endl;
+        //     glm::vec3 p_div = point / (point.z * -2.002002f);
+        //     std::cout << "point / " << div << " = (" << p_div.x << ", "
+        //               << p_div.y << ", " << p_div.z << ")" << std::endl;
+        // }
+
         this->mesh.load(points, maguey::Program(
             std::string(VERT_SHADER), std::string(FRAG_SHADER),
             {
-                camera->createPerspectiveMatrixUniform(),
+                camera->createProjectionMatrixUniform(),
                 camera->createViewMatrixUniform(),
             }, false));
     }

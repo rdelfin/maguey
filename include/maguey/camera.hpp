@@ -29,10 +29,10 @@ class Camera {
 
     Camera& operator=(const Camera&) = delete;
 
-    void* getPerspectiveMatrix();
+    void* getProjectionMatrix();
     void* getViewMatrix();
 
-    Uniform createPerspectiveMatrixUniform();
+    Uniform createProjectionMatrixUniform();
     Uniform createViewMatrixUniform();
 
     virtual ~Camera();
@@ -46,7 +46,7 @@ class Camera {
     glm::vec3 position;
     float swidth, sheight;
 
-    glm::mat4 perspective_mat, view_mat;
+    glm::mat4 projection_mat, view_mat;
 };
 
 }  // namespace maguey

@@ -36,27 +36,38 @@ Camera::Camera(const glm::vec3& up, const glm::vec3& center,
     this->update_all();
 }
 
-void* Camera::getPerspectiveMatrix() {
-    return glm::value_ptr(this->perspective_mat);
+void* Camera::getProjectionMatrix() {
+    return glm::value_ptr(this->projection_mat);
 }
 
 void* Camera::getViewMatrix() {
     return glm::value_ptr(this->view_mat);
 }
 
-Uniform Camera::createPerspectiveMatrixUniform() {
-    return Uniform(this->getPerspectiveMatrix(), UNIFORM_FMAT_4, "perspective");
+Uniform Camera::createProjectionMatrixUniform() {
+    return Uniform(this->getProjectionMatrix(), UNIFORM_FMAT_4, "projection");
 }
 
 Uniform Camera::createViewMatrixUniform() {
     return Uniform(this->getViewMatrix(), UNIFORM_FMAT_4, "view");
 }
 
+void print_mat(const glm::mat4& mat) {
+    printf("%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n",
+           mat[0][0], mat[0][1], mat[0][2], mat[0][3],
+           mat[1][0], mat[1][1], mat[1][2], mat[1][3],
+           mat[2][0], mat[2][1], mat[2][2], mat[2][3],
+           mat[3][0], mat[3][1], mat[3][2], mat[3][3]);
+}
+
 void Camera::update_all() {
-    this->perspective_mat = glm::perspectiveFov(2.355f, this->swidth,
-                                                this->sheight, 0.001f, 1000.0f);
+    this->projection_mat = glm::perspectiveFov(2.0f, this->swidth,
+                                               this->sheight, 1.0f, 1000.0f);
+    // this->projection_mat[3][2] = -1.0f;
     this->view_mat = glm::lookAt(this->position,
                                  this->position + this->forwards, up);
+
+    print_mat(this->projection_mat);
 }
 
 Camera::~Camera() { }
