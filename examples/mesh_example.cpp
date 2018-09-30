@@ -20,6 +20,7 @@
 #include <glm/glm.hpp>
 
 #include <maguey/maguey.hpp>
+#include <maguey/internal/debug_util.hpp>
 
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
@@ -59,22 +60,13 @@ class MainGame : public maguey::Game {
  protected:
     void load(maguey::Camera* camera) override {
         glm::mat4 view = *reinterpret_cast<glm::mat4*>(camera->getViewMatrix());
-        glm::mat4 proj = *reinterpret_cast<glm::mat4*>(camera->getProjectionMatrix());
+        glm::mat4 proj = *reinterpret_cast<glm::mat4*>(
+            camera->getProjectionMatrix());
         std::cout << "New points: " << std::endl;
         for (glm::vec3& point : points) {
             point = glm::vec3(proj * view * glm::vec4(point, 1.0f));
-            std::cout << "(" << point.x << ", " << point.y << ", " << point.z
-                      << ", " << (point.z * -1.0f) << ")" << std::endl;
+            std::cout << vec_str(point) << std::endl;
         }
-
-        // std::cout << "Post-division:" << std::endl;
-        // for (glm::vec3 point : points) {
-        //     float div = point.z * -2.002002f;
-        //     std::cout << point.z << "* -2.002002f = " << div << std::endl;
-        //     glm::vec3 p_div = point / (point.z * -2.002002f);
-        //     std::cout << "point / " << div << " = (" << p_div.x << ", "
-        //               << p_div.y << ", " << p_div.z << ")" << std::endl;
-        // }
 
         this->mesh.load(points, maguey::Program(
             std::string(VERT_SHADER), std::string(FRAG_SHADER),
