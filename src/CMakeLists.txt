@@ -19,7 +19,18 @@ FILE(GLOB src ${pwd}/*.cpp)
 
 add_library(maguey STATIC ${src})
 
-target_link_libraries(maguey ${SDL2_LIBRARY} ${stdgl_libraries} ${glm_LIBRARY_DIRS})
+message("LINKING")
+message("SDL2: ${SDL2_LIBRARY}")
+message("Glew LIBRARIES: ${GLEW_LIBRARIES}")
+message("Glew LIBRARY: ${GLEW_LIBRARY}")
+message("GLM library dir: ${glm_LIBRARY_DIRS}")
+message("GLM libraries: ${glm_LIBRARIES}")
+message("GLM library: ${glm_LIBRARY}")
+message("OpenGL include: ${OPENGL_INCLUDE_DIRS}")
+message("OpenGL library dirs: ${OPENGL_LIBRARY_DIRS}")
+message("OpenGL Library: ${OPENGL_gl_LIBRARY}")
+
+target_link_libraries(maguey ${SDL2_LIBRARY} ${GLEW_LIBRARIES} ${glm_LIBRARY_DIRS} ${OPENGL_gl_LIBRARY})
 
 install(TARGETS maguey
         EXPORT magueyTargets

@@ -18,11 +18,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${maguey_SOURCE_DIR}/modules")
 set(BIN_DIR ${maguey_SOURCE_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-FILE(GLOB cmakes ${CMAKE_SOURCE_DIR}/cmake/*.cmake)
-FOREACH(cmake ${cmakes})
-    INCLUDE(${cmake})
-ENDFOREACH(cmake)
-
 if (MSVC)
     if (CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
         string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -35,7 +30,13 @@ else()
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE} -O2")
 endif()
 
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+
 include_directories()
+
+FIND_PACKAGE(OpenGL REQUIRED)
+find_package(GLEW REQUIRED)
+find_package(glm REQUIRED)
 find_package(SDL2 REQUIRED)
 # find_package(SDL2_image REQUIRED)
 # find_package(SDL2_ttf REQUIRED)

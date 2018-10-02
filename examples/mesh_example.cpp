@@ -53,7 +53,7 @@ static std::vector<glm::vec3> points = {
 
 class MainGame : public maguey::Game {
  public:
-    MainGame() : maguey::Game("Mesh test", 1920, 1080) { }
+    MainGame() : maguey::Game("Mesh test", 800, 600) { }
 
     virtual ~MainGame() { }
 
