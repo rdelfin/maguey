@@ -11,6 +11,8 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
+#define GLM_FORCE_RADIANS
+
 #include <GL/glew.h>
 #include <GL/gl.h>
 
@@ -19,8 +21,8 @@
 #include <maguey/maguey.hpp>
 
 
-const int SCREEN_WIDTH  = 1920;
-const int SCREEN_HEIGHT = 1080;
+const int SCREEN_WIDTH  = 1280;
+const int SCREEN_HEIGHT = 800;
 
 const char VERT_SHADER[] = R"zzz(
 #version 330 core
@@ -58,7 +60,7 @@ static const GLfloat g_color_buffer_data[] = {
 
 class MainGame : public maguey::Game {
  public:
-    MainGame() : maguey::Game("Display test", 1920, 1080),
+    MainGame() : maguey::Game("Display test", SCREEN_WIDTH, SCREEN_HEIGHT),
         program(VERT_SHADER, FRAG_SHADER, {}, false) { }
     virtual ~MainGame() {}
 

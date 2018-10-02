@@ -11,6 +11,8 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
+#define GLM_FORCE_RADIANS
+
 #include <GL/glew.h>
 #include <GL/gl.h>
 
@@ -26,7 +28,7 @@ const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
 
 const char VERT_SHADER[] = R"zzz(
-#version 330 core
+#version 400 core
 layout(location = 0) in vec3 pos;
 
 uniform mat4 projection;
@@ -38,7 +40,7 @@ void main() {
 )zzz";
 
 const char FRAG_SHADER[] = R"zzz(
-#version 330 core
+#version 400 core
 out vec3 color;
 void main() {
     color = vec3(1.0, 1.0, 0.0);
