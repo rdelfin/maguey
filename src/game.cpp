@@ -31,7 +31,7 @@ Game::Game() { }
 
 Game::Game(const std::string& window_name, size_t width, size_t height)
     : window_name(window_name), window_width(width), window_height(height),
-      camera(glm::vec3(0, 1, 0), glm::vec3(0, 0, 0), glm::vec3(10, 0, -5),
+      camera(glm::vec3(0, 1, 0), glm::vec3(0, 0, 0), glm::vec3(-1, 0, 1),
              width, height) { }
 
 void Game::run() {

@@ -30,7 +30,7 @@ Camera::Camera() {
 
 Camera::Camera(const glm::vec3& up, const glm::vec3& center,
                const glm::vec3& pos, size_t swidth, size_t sheight)
-               : swidth(swidth), sheight(sheight) {
+               : swidth(swidth), sheight(sheight), position(pos) {
     this->forwards = glm::normalize(center - pos);
     this->left = glm::normalize(glm::cross(up, this->forwards));
     this->up = glm::normalize(glm::cross(this->forwards, left));
@@ -55,12 +55,16 @@ Uniform Camera::createViewMatrixUniform() {
 
 void Camera::update_all() {
     this->projection_mat = glm::perspectiveFov(2.0f, this->swidth,
-                                               this->sheight, 1.0f, 1000.0f);
-    // this->projection_mat[3][2] = -1.0f;
-    this->view_mat = glm::lookAt(this->position,
-                                 this->position + this->forwards, up);
+                                               this->sheight, 0.5f, 1000.0f);
 
-    std::cout << mat_str(this->projection_mat) << std::endl;
+    std::cout << "Position: " << vec_str(this->position) << std::endl;
+    std::cout << "Forwards: " << vec_str(this->forwards) << std::endl;
+    std::cout << "Up:       " << vec_str(this->up)       << std::endl;
+    // Each vector is a column
+    this->view_mat = glm::lookAt(this->position,
+                                 this->position + this->forwards, this->up);
+
+    std::cout << mat_str(this->view_mat) << std::endl;
 }
 
 Camera::~Camera() { }

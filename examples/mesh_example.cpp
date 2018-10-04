@@ -20,7 +20,6 @@
 #include <vector>
 
 #include <glm/glm.hpp>
-
 #include <maguey/maguey.hpp>
 #include <maguey/internal/debug_util.hpp>
 
@@ -35,7 +34,7 @@ uniform mat4 projection;
 uniform mat4 view;
 
 void main() {
-    gl_Position = vec4(pos, pos.z * -1.0f);
+    gl_Position = vec4(pos, 1.0f);
 }
 )zzz";
 
@@ -66,7 +65,8 @@ class MainGame : public maguey::Game {
             camera->getProjectionMatrix());
         std::cout << "New points: " << std::endl;
         for (glm::vec3& point : points) {
-            point = glm::vec3(proj * view * glm::vec4(point, 1.0f));
+            glm::vec4 temp_point = proj * view * glm::vec4(point, 1.0f);
+            point = glm::vec3(temp_point / temp_point.w);
             std::cout << vec_str(point) << std::endl;
         }
 
