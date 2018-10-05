@@ -160,7 +160,6 @@ void Uniform::enable(GLint program_id) {
     if (!loc_set) {
         CHECK_GL_ERROR(this->loc = glGetUniformLocation(
                            program_id, uniform_name.c_str()));
-        printf("LOCATION of %s: %d\n", this->uniform_name.c_str(), this->loc);
         loc_set = true;
     }
     uniform_func_map[this->type](this->loc, this->data);

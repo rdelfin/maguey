@@ -56,15 +56,8 @@ Uniform Camera::createViewMatrixUniform() {
 void Camera::update_all() {
     this->projection_mat = glm::perspectiveFov(2.0f, this->swidth,
                                                this->sheight, 0.5f, 1000.0f);
-
-    std::cout << "Position: " << vec_str(this->position) << std::endl;
-    std::cout << "Forwards: " << vec_str(this->forwards) << std::endl;
-    std::cout << "Up:       " << vec_str(this->up)       << std::endl;
-    // Each vector is a column
     this->view_mat = glm::lookAt(this->position,
                                  this->position + this->forwards, this->up);
-
-    std::cout << mat_str(this->view_mat) << std::endl;
 }
 
 Camera::~Camera() { }

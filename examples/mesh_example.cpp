@@ -34,7 +34,7 @@ uniform mat4 projection;
 uniform mat4 view;
 
 void main() {
-    gl_Position = vec4(pos, 1.0f);
+    gl_Position = projection * view * vec4(pos, 1.0f);
 }
 )zzz";
 
@@ -60,16 +60,6 @@ class MainGame : public maguey::Game {
 
  protected:
     void load(maguey::Camera* camera) override {
-        glm::mat4 view = *reinterpret_cast<glm::mat4*>(camera->getViewMatrix());
-        glm::mat4 proj = *reinterpret_cast<glm::mat4*>(
-            camera->getProjectionMatrix());
-        std::cout << "New points: " << std::endl;
-        for (glm::vec3& point : points) {
-            glm::vec4 temp_point = proj * view * glm::vec4(point, 1.0f);
-            point = glm::vec3(temp_point / temp_point.w);
-            std::cout << vec_str(point) << std::endl;
-        }
-
         this->mesh.load(points, maguey::Program(
             std::string(VERT_SHADER), std::string(FRAG_SHADER),
             {
