@@ -29,6 +29,9 @@ class Camera {
 
     Camera& operator=(const Camera&) = delete;
 
+    void setCamera(const glm::vec3& up, const glm::vec3& center,
+                   const glm::vec3& pos);
+
     void* getProjectionMatrix();
     void* getViewMatrix();
 

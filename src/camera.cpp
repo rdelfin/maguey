@@ -53,6 +53,14 @@ Uniform Camera::createViewMatrixUniform() {
     return Uniform(this->getViewMatrix(), UNIFORM_FMAT_4, "view");
 }
 
+void Camera::setCamera(const glm::vec3& up, const glm::vec3& center,
+                       const glm::vec3& pos) {
+    this->forwards = glm::normalize(center - pos);
+    this->left = glm::normalize(glm::cross(up, this->forwards));
+    this->up = glm::normalize(glm::cross(this->forwards, this->left));
+    this->update_all();
+}
+
 void Camera::update_all() {
     this->projection_mat = glm::perspectiveFov(2.0f, this->swidth,
                                                this->sheight, 0.5f, 1000.0f);
