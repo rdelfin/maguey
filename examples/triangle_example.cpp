@@ -52,6 +52,12 @@ static std::vector<glm::vec3> points = {
     glm::vec3(0.0f,   1.0f, 0.0f),
 };
 
+static std::vector<glm::vec4> colors = {
+    glm::vec4(1.0f, 0.0f, 0.0f, 1.0f),
+    glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
+    glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
+};
+
 class MainGame : public maguey::Game {
  public:
     MainGame() : maguey::Game("Mesh test", 800, 600) { }

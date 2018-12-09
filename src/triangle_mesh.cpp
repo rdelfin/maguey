@@ -42,13 +42,14 @@ void TriangleMesh::load(const std::vector<glm::vec3>& pos,
 }
 
 void TriangleMesh::render() {
-    program.enable();
+    this->program.enable();
 
-    CHECK_GL_ERROR(glEnableVertexAttribArray(0));
+    CHECK_GL_ERROR(glEnableVertexAttribArray(this->vao));
     CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, this->buffer));
-    CHECK_GL_ERROR(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr));
+    CHECK_GL_ERROR(glVertexAttribPointer(this->vao, 3, GL_FLOAT, GL_FALSE, 0,
+                                         nullptr));
     CHECK_GL_ERROR(glDrawArrays(GL_TRIANGLES, 0, this->vertices->size()));
-    CHECK_GL_ERROR(glDisableVertexAttribArray(0));
+    CHECK_GL_ERROR(glDisableVertexAttribArray(this->vao));
 }
 
 TriangleMesh::~TriangleMesh() {
