@@ -23,8 +23,8 @@
 #include <maguey/maguey.hpp>
 #include <maguey/internal/debug_util.hpp>
 
-const int SCREEN_WIDTH = 1920;
-const int SCREEN_HEIGHT = 1080;
+const int SCREEN_WIDTH = 3240;
+const int SCREEN_HEIGHT = 2160;
 
 const char VERT_SHADER[] = R"zzz(
 #version 300 es
@@ -66,7 +66,7 @@ static std::vector<glm::vec4> colors = {
 
 class MainGame : public maguey::Game {
  public:
-    MainGame() : maguey::Game("Mesh test", 800, 600) { }
+    MainGame() : maguey::Game("Mesh test", SCREEN_WIDTH, SCREEN_HEIGHT, true) { }
 
     virtual ~MainGame() { }
 

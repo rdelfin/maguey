@@ -29,8 +29,9 @@ namespace maguey {
 
 Game::Game() { }
 
-Game::Game(const std::string& window_name, size_t width, size_t height)
+Game::Game(const std::string& window_name, size_t width, size_t height, bool fullscreen)
     : window_name(window_name), window_width(width), window_height(height),
+      fullscreen(fullscreen),
       camera(glm::vec3(0, 1, 0), glm::vec3(0, 0, 0), glm::vec3(-1, 0, 1),
              width, height) { }
 
@@ -54,10 +55,12 @@ void Game::run() {
         return;
     }
 
+    auto window_flags = SDL_WINDOW_OPENGL
+            | SDL_WINDOW_SHOWN | (this->fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
     SDL_Window *window = SDL_CreateWindow("Maguey test", 100, 100,
                                           this->window_width,
                                           this->window_height,
-                                          SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+                                          window_flags);
     if (window == nullptr) {
         std::cerr << "There was an error running SDL_CreateWindow" << std::endl;
         SDL_Quit();

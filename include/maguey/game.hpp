@@ -22,7 +22,7 @@ namespace maguey {
 class Game {
  public:
     Game();
-    Game(const std::string& window_name, size_t width, size_t height);
+    Game(const std::string& window_name, size_t width, size_t height, bool fullscreen = false);
 
     void run();
 
@@ -36,6 +36,7 @@ class Game {
  private:
     std::string window_name;
     size_t window_width, window_height;
+    bool fullscreen;
     Camera camera;
 };
 
