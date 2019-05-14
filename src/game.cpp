@@ -39,6 +39,10 @@ void Game::run() {
     SDL_Event e;
     SDL_GLContext glContext;
 
+    // For experimental
+    glewExperimental = GL_TRUE;
+    glewInit();
+
     // Use OpenGL 3.1 core
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);

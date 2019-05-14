@@ -27,7 +27,10 @@ const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
 
 const char VERT_SHADER[] = R"zzz(
-#version 400 core
+#version 300 es
+#ifdef GL_ES
+precision mediump float;
+#endif
 layout(location = 0) in vec3 pos;
 
 uniform mat4 projection;
@@ -39,7 +42,10 @@ void main() {
 )zzz";
 
 const char FRAG_SHADER[] = R"zzz(
-#version 400 core
+#version 300 es
+#ifdef GL_ES
+precision mediump float;
+#endif
 out vec3 color;
 void main() {
     color = vec3(1.0, 1.0, 0.0);
